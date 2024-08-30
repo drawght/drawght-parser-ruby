@@ -2,6 +2,10 @@ require "minitest/autorun"
 require_relative "../lib/drawght"
 
 describe "drawght compiler" do
+  def compile(template, data)
+    Drawght::Compiler.new(template).compile(data)
+  end
+
   describe "when compile" do
     it "convert variables" do
       template = "{name} v{version} ({release date}/{start-at})";
@@ -11,7 +15,7 @@ describe "drawght compiler" do
         "release date" => "2021-07-01",
         "start-at" => "2021-06-30",
       }
-      result = Drawght.load(template).compile data
+      result = compile template, data
 
       expect(result).must_equal "Drawght v0.1.0 (2021-07-01/2021-06-30)"
     end
@@ -28,8 +32,7 @@ describe "drawght compiler" do
           release: "2021-07-01",
         }
       }
-      drawght = Drawght.load template
-      result = drawght.compile data
+      result = compile template, data
 
       expect(result).must_equal "Drawght - drawght-compiler v0.1.0 (2021-07-01)"
     end
@@ -39,8 +42,7 @@ describe "drawght compiler" do
       data = {
         tags: %w[Text Test Tagged]
       }
-      drawght = Drawght.load template
-      result = drawght.compile data
+      result = compile template, data
 
       expect(result).must_equal "- Text\n- Test\n- Tagged"
     end
