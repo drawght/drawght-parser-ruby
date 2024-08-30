@@ -11,7 +11,7 @@ describe "drawght compiler" do
         "release date" => "2021-07-01",
         "start-at" => "2021-06-30",
       }
-      result = Drawght::Compiler.new(template).compile data
+      result = Drawght.load(template).compile data
 
       expect(result).must_equal "Drawght v0.1.0 (2021-07-01/2021-06-30)"
     end
