@@ -169,6 +169,29 @@ Tags:
 </ul>
 ```
 
+## Install
+
+```bash
+gem install drawght
+```
+
+## Usage
+
+```ruby
+require "drawght"
+
+template = "{package.name} v{package.version}"
+result = Drawght.compile template, {
+  package: {
+    name: "Drawght",
+    version: "1.0.0",
+  }
+}
+
+puts result
+# Drawght v1.0.0
+```
+
 ## Syntax
 
 Drawght has a simple syntax:
