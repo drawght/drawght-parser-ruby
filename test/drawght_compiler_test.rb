@@ -8,7 +8,7 @@ describe "drawght compiler" do
 
   describe "when compile" do
     it "convert variables" do
-      template = "{name} v{version} ({release date}/{start-at})";
+      template = "{name} v{version} ({release date}/{start-at})"
       result = compile template, {
         name: "Drawght",
         version: "0.1.0",
