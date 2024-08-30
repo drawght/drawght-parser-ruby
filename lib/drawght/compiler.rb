@@ -1,6 +1,18 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
+class Hash
+  def deep_stringify_keys!
+    transform_keys! do |key|
+      if (Hash === value = fetch(key))
+        value.deep_stringify_keys!
+      end
+
+      key.to_s
+    end
+  end
+end
+
 class Drawght::Compiler
   PREFIX, ATTRIBUTE, QUERY, ITEM, SUFFIX,  = "{", ".", ":", "#", "}"
   KEY, LIST, INDEX = "(?<key>.*?)", "(?<list>.*?)", "(?<index>.*?)"
@@ -15,7 +27,7 @@ class Drawght::Compiler
   end
 
   def compile(data)
-    @data = data.transform_keys! &:to_s
+    @data = data.deep_stringify_keys!
     parse_keys(parse_queries(@template, @data), @data)
   end
 
