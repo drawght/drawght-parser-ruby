@@ -57,7 +57,15 @@ describe "drawght compiler" do
     end
 
     it "convert list of objects" do
-      skip
+      template = "- [{references:name}]({references:url})"
+      result = compile template, {
+        references: [
+          { name: "Mustache", url: "//mustache.github.io" },
+          { name: "Handlebars", url: "//handlebarsjs.com" },
+        ]
+      }
+
+      expect(result).must_equal "- [Mustache](//mustache.github.io)\n- [Handlebars](//handlebarsjs.com)"
     end
   end
 end
