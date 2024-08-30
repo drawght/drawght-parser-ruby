@@ -35,7 +35,14 @@ describe "drawght compiler" do
     end
 
     it "convert list" do
-      skip
+      template = "- {tags}"
+      data = {
+        tags: %w[Text Test Tagged]
+      }
+      drawght = Drawght.load template
+      result = drawght.compile data
+
+      expect(result).must_equal "- Text\n- Test\n- Tagged"
     end
 
     it "convert item in a list" do
