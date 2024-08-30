@@ -48,7 +48,16 @@ describe "drawght compiler" do
     end
 
     it "convert item in a list" do
-      skip
+      template = '{languages#2.name} site "https:{languages#2.url}" and {languages#1.name} site "https:{languages#1.url}"'
+      data = {
+        languages: [
+          { name: "Go", url: "//go.dev/" },
+          { name: "Ruby", url: "//www.ruby-lang.org/" },
+        ]
+      }
+      result = compile template, data
+
+      expect(result).must_equal %{Ruby site "https://www.ruby-lang.org/" and Go site "https://go.dev/"}
     end
 
     it "convert list of objects" do
