@@ -1,4 +1,7 @@
-class Drawght::Parser
+# encoding: utf-8
+# frozen_string_literal: true
+
+class Drawght::Compiler
   PREFIX, ATTRIBUTE, QUERY, ITEM, SUFFIX,  = "{", ".", ":", "#", "}"
   KEY, LIST, INDEX = "(?<key>.*?)", "(?<list>.*?)", "(?<index>.*?)"
   EOL = /\r?\n/
@@ -11,9 +14,12 @@ class Drawght::Parser
     @template = template
   end
 
-  def parse(data)
-    self.parse_keys(self.parse_queries(@template, data), data)
+  def compile(data)
+    @data = data.transform_keys! &:to_s
+    parse_keys(parse_queries(@template, @data), @data)
   end
+
+  private
 
   def parse_queries(template, data)
     template.split(EOL).map do |line|
@@ -49,8 +55,6 @@ class Drawght::Parser
     end
     result
   end
-
-  private
 
   def value_from_key(nested_key, data)
     item = nested_key.match ITEM_PATTERN

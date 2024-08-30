@@ -1,7 +1,7 @@
 module Drawght
-  require_relative "drawght/parser"
+  require_relative "drawght/compiler"
 
   def self.new(template)
-    Drawght::Parser.new template
+    Compiler.new template
   end
 end
