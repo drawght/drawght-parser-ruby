@@ -9,20 +9,19 @@ describe "drawght compiler" do
   describe "when compile" do
     it "convert variables" do
       template = "{name} v{version} ({release date}/{start-at})";
-      data = {
+      result = compile template, {
         name: "Drawght",
         version: "0.1.0",
-        "release date" => "2021-07-01",
+        "release date": "2021-07-01",
         "start-at" => "2021-06-30",
       }
-      result = compile template, data
 
       expect(result).must_equal "Drawght v0.1.0 (2021-07-01/2021-06-30)"
     end
 
     it "convert hash objects" do
       template = "{product.name} - {package.name} v{package.version} ({package.release})"
-      data = {
+      result = compile template, {
         product: {
           name: "Drawght",
         },
@@ -32,30 +31,27 @@ describe "drawght compiler" do
           release: "2021-07-01",
         }
       }
-      result = compile template, data
 
       expect(result).must_equal "Drawght - drawght-compiler v0.1.0 (2021-07-01)"
     end
 
     it "convert list" do
       template = "- {tags}"
-      data = {
+      result = compile template, {
         tags: %w[Text Test Tagged]
       }
-      result = compile template, data
 
       expect(result).must_equal "- Text\n- Test\n- Tagged"
     end
 
     it "convert item in a list" do
       template = '{languages#2.name} site "https:{languages#2.url}" and {languages#1.name} site "https:{languages#1.url}"'
-      data = {
+      result = compile template, {
         languages: [
           { name: "Go", url: "//go.dev/" },
           { name: "Ruby", url: "//www.ruby-lang.org/" },
         ]
       }
-      result = compile template, data
 
       expect(result).must_equal %{Ruby site "https://www.ruby-lang.org/" and Go site "https://go.dev/"}
     end
