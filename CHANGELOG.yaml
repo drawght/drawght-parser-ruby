@@ -1,0 +1,13 @@
+- version: 0.2.0
+  release: 2024-08-30
+  summary:
+    Tests and tests.
+  changes:
+  - Tests have been added to test variables, objects and lists.
+
+- version: 0.1.0
+  release: 2021-07-11
+  summary:
+    Work in progress! Syntax and compiler have been coded.
+  changes:
+  - Process variables, objects and lists.
