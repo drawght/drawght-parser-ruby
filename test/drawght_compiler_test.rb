@@ -54,6 +54,12 @@ describe "drawght compiler" do
       }
 
       expect(result).must_equal %{Ruby site "https://www.ruby-lang.org/" and Go site "https://go.dev/"}
+
+      template = "The {languages#1} programing language is a programmer's best friend"
+      result = compile template, {
+        languages: %w[Ruby NodeJS Go]
+      }
+      expect(result).must_equal "The Ruby programing language is a programmer's best friend"
     end
 
     it "convert list of objects" do
