@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Drawght
   autoload :Compiler, "#{__dir__}/drawght/compiler"
   autoload :Markup, "#{__dir__}/drawght/markup"
