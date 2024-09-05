@@ -1,5 +1,5 @@
 module Drawght
-  require_relative "drawght/compiler"
+  autoload :Compiler, "#{__dir__}/drawght/compiler"
 
   def self.load(template)
     Compiler.new template
