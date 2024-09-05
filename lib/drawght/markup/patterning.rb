@@ -9,27 +9,26 @@ module Drawght::Markup::Patterning
     end
   end
 
+  Tagging = Struct.new :template do
+    def convert keys
+      sprintf template, keys
+    end
+  end
+
   attr_reader *%i[
     mapping
     tokens
     grouping
     tagging
+    pattern
   ]
 
-  def pattern_for_scanning grouping = self.grouping
-    /#{grouping.start}#{grouping.content}#{grouping.finish}/m
+  def scan_matches_from text, &block
+    text.scan(pattern[grouping]).uniq.each &block
   end
 
-  def pattern_for_replace grouping
-    pattern_for_scanning grouping
-  end
-
-  def scan_matches_from text
-    text.scan(pattern_for_scanning).uniq
-  end
-
-  def convert_markup_to_tag markup, content
+  def convert_markup_to_tag markup, content, options = {}
     tag = mapping.fetch markup, markup
-    sprintf tagging, { tag: tag, content: content }
+    tagging.convert options.update(tag:, content:)
   end
 end

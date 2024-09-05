@@ -15,22 +15,23 @@ class Formatting
       "`" => "code",
     }
     @tokens = "[#{Regexp.escape mapping.keys.join}]"
-    patterns = {
+    @grouping = Grouping.new **{
       start: "(?<start>#{tokens})",
       content: "(?<content>[^\s].*?[^\s])",
       finish: "(?<finish>#{tokens})",
     }
-    @grouping = Grouping.new **patterns
-    @tagging = "<%{tag}>%{content}</%{tag}>"
+    @tagging = Tagging.new "<%{tag}>%{content}</%{tag}>"
+    @pattern = lambda do |grouping|
+      /#{grouping.start}#{grouping.content}#{grouping.finish}/m
+    end
   end
 
   def process text
-    matches = scan_matches_from text
     result = text.dup
 
-    matches.each do |(start, content, finish)|
+    scan_matches_from text do |(start, content, finish)|
       tagging = convert_markup_to_tag start, content
-      marking = pattern_for_replace(Grouping[start:, content:, finish:].escape!)
+      marking = pattern[Grouping[start:, content:, finish:].escape!]
       result.gsub! marking, tagging
     end
 
