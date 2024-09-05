@@ -1,62 +1,41 @@
 # frozen_string_literal: true
 
-class Drawght::Markup::Formatting
-  def process text
-    matches = scan_matches_from text
-    result = text.dup
+module Drawght::Markup
 
-    matches.each do |(start, content, finish)|
-      tagging = convert_markup_to_tag start, content
-      marking = markup_pattern(start:, content:, finish:)
-      result.gsub! marking, tagging
-    end
+class Formatting
+  include Patterning
 
-    result
-  end
-
-  private
-
-  def mapping
-    {
+  def initialize
+    @mapping = {
       "*" => "b",
       "/" => "i",
       "_" => "u",
       "-" => "del",
       "+" => "ins",
       "`" => "code",
-    }.freeze
+    }
+    @tokens = "[#{Regexp.escape mapping.keys.join}]"
+    patterns = {
+      start: "(?<start>#{tokens})",
+      content: "(?<content>[^\s].*?[^\s])",
+      finish: "(?<finish>#{tokens})",
+    }
+    @grouping = Grouping.new **patterns
+    @tagging = "<%{tag}>%{content}</%{tag}>"
   end
 
-  def content_group
-    "(?<content>[^\s].*?[^\s])"
-  end
+  def process text
+    matches = scan_matches_from text
+    result = text.dup
 
-  def start_group
-    "(?<start>#{tokens})"
-  end
+    matches.each do |(start, content, finish)|
+      tagging = convert_markup_to_tag start, content
+      marking = pattern_for_replace(Grouping[start:, content:, finish:].escape!)
+      result.gsub! marking, tagging
+    end
 
-  def finish_group
-    "(?<finish>#{tokens})"
+    result
   end
+end
 
-  def tokens
-    "[#{Regexp.escape mapping.keys.join}]"
-  end
-
-  def pattern start: start_group, content: content_group, finish: finish_group
-    /#{start}#{content}#{finish}/m
-  end
-
-  def markup_pattern start:, content:, finish:
-    pattern start: Regexp.escape(start), content:, finish: Regexp.escape(finish)
-  end
-
-  def scan_matches_from text
-    text.scan(pattern).uniq
-  end
-
-  def convert_markup_to_tag markup, content
-    tag = mapping.fetch markup, markup
-    sprintf "<%{tag}>%{content}</%{tag}>", { tag: tag, content: content }
-  end
 end

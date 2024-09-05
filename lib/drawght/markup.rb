@@ -2,5 +2,6 @@
 # frozen_string_literal: true
 
 module Drawght::Markup
+  autoload :Patterning, "#{__dir__}/markup/patterning"
   autoload :Formatting, "#{__dir__}/markup/formatting"
 end
